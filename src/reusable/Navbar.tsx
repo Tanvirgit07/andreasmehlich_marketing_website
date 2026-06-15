@@ -12,9 +12,9 @@ const navLinks = [
     href: "#",
     dropdown: true,
     items: [
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "Changelog", href: "#changelog" },
+      { label: "Dashboard", href: "dashboard" },
+      { label: "Website Builder", href: "website-builder" },
+      { label: "Kora Go", href: "#changelog" },
       { label: "Roadmap", href: "#roadmap" },
     ],
   },
