@@ -35,9 +35,9 @@ export default function Footer() {
     {
       title: "Resources",
       links: [
-        { label: "Help Center", href: "#" },
-        { label: "Impressum", href: "#" },
-        { label: "Privacy Policy", href: "#" },
+        { label: "Help Center", href: "help-center" },
+        { label: "Impressum", href: "impressum" },
+        { label: "Privacy Policy", href: "legals" },
         { label: "Terms of Service", href: "#" },
         { label: "DPA / AVV", href: "#" },
         { label: "Cookie Policy", href: "#" },

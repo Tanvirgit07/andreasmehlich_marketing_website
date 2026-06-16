@@ -116,7 +116,7 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <Link
-            href="/login"
+            href="/signin"
             className="rounded-md px-3 py-2 text-base font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
           >
             Login
@@ -165,7 +165,7 @@ export default function Navbar() {
           ))}
           <div className="mt-4 flex flex-col gap-2">
             <a
-              href="/login"
+              href="/signin"
               className="rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200"
             >
               Login
