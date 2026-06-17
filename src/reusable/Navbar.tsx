@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "next-auth/react";
 
 const navLinks = [
   { label: "Home", href: "/", dropdown: false },
@@ -44,6 +45,15 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const closeMobileMenu = () => setMobileOpen(false);
+  const session = useSession();
+  const user = session?.data?.user;
+  const userName = user?.name || user?.email || "User";
+  const userInitial = userName.charAt(0).toUpperCase();
+  const isLoggedIn = session.status === "authenticated" && Boolean(user);
+  const handleLogout = () => {
+    closeMobileMenu();
+    signOut({ callbackUrl: "/" });
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full backdrop-blur-xl">
@@ -116,12 +126,41 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/signin"
-            className="rounded-md px-3 py-2 text-base font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <div className="group relative">
+              <button className="inline-flex h-10 items-center gap-3 rounded-md border border-blue-300/10 bg-white/5 px-3 text-base font-medium text-slate-200 transition-colors hover:border-blue-300/25 hover:bg-white/10 hover:text-white">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-[0_0_18px_rgba(37,99,235,0.35)]">
+                  {userInitial}
+                </span>
+                <span className="max-w-28 truncate">{userName}</span>
+                <ChevronDown className="h-4 w-4 text-slate-400 transition-transform group-hover:rotate-180" />
+              </button>
+
+              <div className="invisible absolute right-0 top-full mt-3 w-44 translate-y-1 rounded-md border border-white/10 bg-[#081126] p-2 opacity-0 shadow-2xl shadow-black/40 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="absolute -top-3 left-0 h-3 w-full" />
+                <Link
+                  href="/pricing"
+                  className="block rounded-md px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-blue-500/15 hover:text-white"
+                >
+                  Pricing
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="block w-full rounded-md px-3 py-2.5 text-left text-sm font-medium text-slate-300 transition-colors hover:bg-blue-500/15 hover:text-white"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link
+              href="/signin"
+              className="rounded-md px-3 py-2 text-base font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              Login
+            </Link>
+          )}
           <Button
             asChild
             className="h-10 rounded-md bg-blue-600 px-5 text-base font-semibold text-white shadow-[0_10px_30px_rgba(37,99,235,0.35)] transition-colors hover:bg-blue-500"
@@ -174,13 +213,38 @@ export default function Navbar() {
             </div>
           ))}
           <div className="mt-4 flex flex-col gap-2">
-            <a
-              href="/signin"
-              onClick={closeMobileMenu}
-              className="rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200"
-            >
-              Login
-            </a>
+            {isLoggedIn ? (
+              <>
+                <div className="flex items-center justify-center gap-3 rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white">
+                    {userInitial}
+                  </span>
+                  <span className="max-w-40 truncate">{userName}</span>
+                </div>
+                <Link
+                  href="/pricing"
+                  onClick={closeMobileMenu}
+                  className="rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200"
+                >
+                  Pricing
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <a
+                href="/signin"
+                onClick={closeMobileMenu}
+                className="rounded-md border border-white/10 px-4 py-2.5 text-center text-base font-medium text-slate-200"
+              >
+                Login
+              </a>
+            )}
             <a
               href="/demo"
               onClick={closeMobileMenu}

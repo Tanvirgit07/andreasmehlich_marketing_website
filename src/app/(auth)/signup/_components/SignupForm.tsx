@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   CalendarDays,
   Eye,
@@ -13,6 +14,8 @@ import {
   Store,
   User,
 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const features = [
   {
@@ -39,12 +42,69 @@ const features = [
 ];
 
 function SignupForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!acceptedTerms) {
+      toast.error("Please accept the terms and privacy policy.");
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    createUser.mutate();
   }
+
+  const createUser = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/register-business-owner`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: fullName,
+            businessName,
+            email,
+            password,
+            confirmPassword: repeatPassword,
+          }),
+        }
+      );
+
+      const response = await res.json().catch(() => null);
+
+      if (!res.ok || response?.status === false) {
+        throw new Error(response?.message || "Signup failed. Please try again.");
+      }
+
+      return response;
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Account created successfully.");
+      router.push("/signin");
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Signup failed. Please try again."
+      );
+    },
+  });
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-[#010616] px-4 py-8 text-white sm:px-6 sm:py-10 lg:px-8 lg:py-12">
@@ -123,7 +183,11 @@ function SignupForm() {
               <User className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
+                name="name"
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
                 placeholder="Full Name"
+                required
                 className="h-12 w-full rounded-lg border border-blue-300/15 bg-[#0a1730]/80 px-12 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-blue-300/35"
               />
             </div>
@@ -131,7 +195,11 @@ function SignupForm() {
               <Store className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
+                name="businessName"
+                value={businessName}
+                onChange={(event) => setBusinessName(event.target.value)}
                 placeholder="Business Name"
+                required
                 className="h-12 w-full rounded-lg border border-blue-300/15 bg-[#0a1730]/80 px-12 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-blue-300/35"
               />
             </div>
@@ -139,7 +207,11 @@ function SignupForm() {
               <Mail className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
               <input
                 type="email"
+                name="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder="Email Address"
+                required
                 className="h-12 w-full rounded-lg border border-blue-300/15 bg-[#0a1730]/80 px-12 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-blue-300/35"
               />
             </div>
@@ -147,7 +219,11 @@ function SignupForm() {
               <Lock className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 placeholder="Password"
+                required
                 className="h-12 w-full rounded-lg border border-blue-300/15 bg-[#0a1730]/80 px-12 pr-12 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-blue-300/35"
               />
               <button
@@ -167,7 +243,11 @@ function SignupForm() {
               <Lock className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
               <input
                 type={showRepeatPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={repeatPassword}
+                onChange={(event) => setRepeatPassword(event.target.value)}
                 placeholder="Repeat Password"
+                required
                 className="h-12 w-full rounded-lg border border-blue-300/15 bg-[#0a1730]/80 px-12 pr-12 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-blue-300/35"
               />
               <button
@@ -187,6 +267,8 @@ function SignupForm() {
             <label className="flex items-center gap-3 text-xs text-slate-400">
               <input
                 type="checkbox"
+                checked={acceptedTerms}
+                onChange={(event) => setAcceptedTerms(event.target.checked)}
                 className="h-5 w-5 rounded border-blue-300/20 bg-[#0a1730] accent-blue-600"
               />
               <span>
@@ -203,9 +285,10 @@ function SignupForm() {
 
             <button
               type="submit"
-              className="h-12 w-full rounded-lg bg-gradient-to-r from-blue-600 to-fuchsia-600 text-base font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.42)] transition-transform hover:-translate-y-0.5"
+              disabled={createUser.isPending}
+              className="h-12 w-full rounded-lg bg-gradient-to-r from-blue-600 to-fuchsia-600 text-base font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.42)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
             >
-              Create Account
+              {createUser.isPending ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
@@ -216,13 +299,13 @@ function SignupForm() {
             </Link>
           </p>
 
-          <div className="my-5 flex items-center gap-5 text-sm text-slate-500">
+          {/* <div className="my-5 flex items-center gap-5 text-sm text-slate-500">
             <div className="h-px flex-1 bg-blue-300/10" />
             Or continue with
             <div className="h-px flex-1 bg-blue-300/10" />
-          </div>
+          </div> */}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {/* <div className="grid gap-4 sm:grid-cols-2">
             <button
               type="button"
               className="inline-flex h-12 items-center justify-center gap-3 rounded-lg border border-blue-300/15 bg-[#061126]/60 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-300/30 hover:bg-blue-500/10 hover:text-white"
@@ -242,7 +325,7 @@ function SignupForm() {
               </span>
               Continue with Microsoft
             </button>
-          </div>
+          </div> */}
         </section>
 
         <p className="text-center text-sm text-slate-400 lg:col-span-2">

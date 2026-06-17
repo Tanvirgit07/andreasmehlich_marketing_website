@@ -77,6 +77,7 @@ const industries = [
     icon: Scissors,
     title: "Barbershop",
     text: "Automate bookings and grow your clients",
+    href: "/barbershops",
     color: "text-violet-300",
     bg: "bg-violet-500/10",
   },
@@ -84,6 +85,7 @@ const industries = [
     icon: Sparkles,
     title: "Beauty Salon",
     text: "Increase appointments and revenue",
+    href: "/beauty-salons",
     color: "text-fuchsia-300",
     bg: "bg-fuchsia-500/10",
   },
@@ -91,6 +93,7 @@ const industries = [
     icon: Utensils,
     title: "Restaurant",
     text: "Manage reservations and customer loyalty",
+    href: "/restaurants",
     color: "text-amber-300",
     bg: "bg-amber-500/10",
   },
@@ -98,6 +101,7 @@ const industries = [
     icon: Dumbbell,
     title: "Gym & Fitness",
     text: "Fill your classes and retain members",
+    href: "/gym",
     color: "text-emerald-300",
     bg: "bg-emerald-500/10",
   },
@@ -105,6 +109,7 @@ const industries = [
     icon: Flower2,
     title: "Spa & Wellness",
     text: "Create bookings and personalized experiences",
+    href: "/wellness-spa",
     color: "text-violet-300",
     bg: "bg-violet-500/10",
   },
@@ -112,6 +117,7 @@ const industries = [
     icon: Stethoscope,
     title: "Dental Clinic",
     text: "Automate reminders and reduce no-shows",
+    href: "/dental-clinic",
     color: "text-sky-300",
     bg: "bg-sky-500/10",
   },
@@ -119,6 +125,7 @@ const industries = [
     icon: Home,
     title: "Home Services",
     text: "Generate leads and book more jobs",
+    href: "/home-service",
     color: "text-blue-300",
     bg: "bg-blue-500/10",
   },
@@ -126,6 +133,7 @@ const industries = [
     icon: Car,
     title: "Auto Service",
     text: "Convert more leads and grow revenue",
+    href: "/auto-service",
     color: "text-orange-300",
     bg: "bg-orange-500/10",
   },
@@ -311,9 +319,10 @@ function RealStories() {
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {industries.map(({ icon: Icon, title, text, color, bg }) => (
-                <div
+              {industries.map(({ icon: Icon, title, text, href, color, bg }) => (
+                <Link
                   key={title}
+                  href={href}
                   className="rounded-xl border border-blue-300/10 bg-[#08152f]/65 p-5 text-center transition-colors hover:border-blue-300/25"
                 >
                   <div
@@ -327,7 +336,7 @@ function RealStories() {
                   <p className="mt-2 text-xs leading-5 text-slate-400">
                     {text}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

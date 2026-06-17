@@ -26,9 +26,16 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
+
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "email" },
-        password: { label: "Password", type: "password", placeholder: "password" },
+        email: {
+          label: "Email",
+          type: "text",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
       },
 
       async authorize(credentials) {
@@ -41,7 +48,9 @@ export const authOptions: NextAuthOptions = {
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
             {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+              },
               body: JSON.stringify({
                 email: credentials.email,
                 password: credentials.password,
@@ -50,62 +59,110 @@ export const authOptions: NextAuthOptions = {
           );
 
           const response = await res.json();
+
           console.log("🔎 API Response:", response);
 
-          if (!res.ok || !response?.status) {
-            throw new Error(response?.message || "Login failed");
+
+          if (!res.ok || !response?.success) {
+            throw new Error(
+              response?.message || "Login failed"
+            );
           }
 
-          const user = response?.data?.user;
+
+          const user = response?.data;
           const accessToken = response?.data?.accessToken;
+          const refreshToken = response?.data?.refreshToken;
+
+
+          if (!user) {
+            throw new Error("User data not found");
+          }
+
 
           return {
-            id: user?._id,
-            email: user?.email,
-            role: user?.role,
-            profileImage: user?.profileImage,
-            refreshToken: user?.refreshToken,
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+
+            profileImage: user.profileImage?.url,
+
             accessToken,
+            refreshToken,
           };
+
+
         } catch (error) {
           console.error("Authentication error:", error);
 
-          const errorMessage =
+          throw new Error(
             error instanceof Error
               ? error.message
-              : "Authentication failed. Please try again.";
-
-          throw new Error(errorMessage);
+              : "Authentication failed"
+          );
         }
       },
     }),
   ],
 
+
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: any;
+    }) {
+
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.email = user.email;
         token.role = user.role;
+
         token.profileImage = user.profileImage;
-        token.refreshToken = user.refreshToken;
+
         token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
       }
+
 
       return token;
     },
 
-    async session({ session, token }: { session: any; token: JWT }) {
+
+    async session({
+      session,
+      token,
+    }: {
+      session: any;
+      token: JWT;
+    }) {
+
+
       session.user = {
+
         id: token.id,
+
+        name: token.name,
+
         email: token.email,
+
         role: token.role,
+
         profileImage: token.profileImage,
-        refreshToken: token.refreshToken,
+
         accessToken: token.accessToken,
+
+        refreshToken: token.refreshToken,
       };
+
 
       return session;
     },
+
   },
 };

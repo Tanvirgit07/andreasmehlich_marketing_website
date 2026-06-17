@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   ArrowRight,
   Cloud,
@@ -45,13 +48,44 @@ const trustItems = [
 ];
 
 function SigninForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  }
+
+    if (!email || !password) {
+      toast.error("Please enter your email and password.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      toast.success("Login successful.");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Login failed. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-[#010616] px-4 py-8 text-white sm:px-6 sm:py-10 lg:px-8 lg:py-12">
@@ -107,9 +141,11 @@ function SigninForm() {
                   <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                   <input
                     type="email"
+                    name="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="Enter your email address"
+                    required
                     className="h-12 w-full rounded-lg border border-blue-300/10 bg-[#0a1730]/80 px-12 text-sm text-slate-200 outline-none transition-colors placeholder:text-slate-500 focus:border-blue-300/35"
                   />
                 </div>
@@ -123,9 +159,11 @@ function SigninForm() {
                   <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Enter your password"
+                    required
                     className="h-12 w-full rounded-lg border border-blue-300/10 bg-[#0a1730]/80 px-12 pr-14 text-sm text-slate-200 outline-none transition-colors placeholder:text-slate-500 focus:border-blue-300/35"
                   />
                   <button
@@ -154,20 +192,21 @@ function SigninForm() {
 
               <button
                 type="submit"
-                className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-blue-600 to-fuchsia-600 text-sm font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.42)] transition-transform hover:-translate-y-0.5"
+                disabled={isLoading}
+                className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-blue-600 to-fuchsia-600 text-sm font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.42)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
-                Log In
-                <ArrowRight className="h-5 w-5" />
+                {isLoading ? "Logging In..." : "Log In"}
+                {!isLoading && <ArrowRight className="h-5 w-5" />}
               </button>
             </form>
 
-            <div className="my-5 flex items-center gap-4 text-sm text-slate-500">
+            {/* <div className="my-5 flex items-center gap-4 text-sm text-slate-500">
               <div className="h-px flex-1 bg-blue-300/10" />
               or
               <div className="h-px flex-1 bg-blue-300/10" />
-            </div>
+            </div> */}
 
-            <button
+            {/* <button
               type="button"
               className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-blue-300/15 bg-[#061126]/60 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-300/30 hover:bg-blue-500/10 hover:text-white"
             >
@@ -175,7 +214,7 @@ function SigninForm() {
                 <span className="text-blue-400">G</span>
               </span>
               Continue with Google
-            </button>
+            </button> */}
 
             <p className="mt-6 text-sm text-slate-400">
               Don&apos;t have an account?{" "}
