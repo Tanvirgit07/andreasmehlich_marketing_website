@@ -10,26 +10,26 @@ export default function Footer() {
     {
       title: "Product",
       links: [
-        { label: "AI Dashboard", href: "#" },
-        { label: "Website Builder", href: "#" },
-        { label: "Kora Go", href: "#" },
-        { label: "Pricing", href: "#" },
+        { label: "AI Dashboard", href: "dashboard" },
+        { label: "Website Builder", href: "website-builder" },
+        { label: "Kora Go", href: "kora-go" },
+        { label: "Pricing", href: "pricing" },
       ],
     },
     {
       title: "Kora Hub",
       links: [
-        { label: "Kora Hub", href: "#" },
-        { label: "Use Cases", href: "#" },
-        { label: "Tutorials", href: "#" },
+        { label: "Kora Hub", href: "kora-hub" },
+        { label: "Use Cases", href: "use-cases" },
+        { label: "Tutorials", href: "tutorials" },
       ],
     },
     {
       title: "Company", 
       links: [
-        { label: "About us", href: "#" },
-        { label: "Contact", href: "#" },
-        { label: "Search", href: "#" },
+        { label: "About us", href: "about-us" },
+        { label: "Contact", href: "contact" },
+        { label: "Search", href: "search" },
       ],
     },
     {

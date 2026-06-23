@@ -71,7 +71,7 @@ function BarbershopsHero() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="#"
+                href="/pricing"
                 className="group inline-flex h-12 items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-7 text-sm font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.55)] transition-transform hover:-translate-y-0.5"
               >
                 Book a Demo
@@ -79,7 +79,7 @@ function BarbershopsHero() {
               </Link>
 
               <Link
-                href="#"
+                href="#how-to-use-it"
                 className="inline-flex h-12 items-center justify-center gap-3 rounded-lg border border-blue-300/15 bg-[#03142d]/70 px-7 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-300/30 hover:bg-blue-500/10 hover:text-white"
               >
                 See How It Works

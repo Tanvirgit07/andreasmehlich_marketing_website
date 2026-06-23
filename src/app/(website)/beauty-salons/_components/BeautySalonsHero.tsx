@@ -45,7 +45,7 @@ const features = [
 
 function BeautySalonsHero() {
   return (
-    <section className="relative isolate overflow-hidden border-b border-blue-400/15 bg-[#020813] px-4 py-12 text-white sm:px-6 lg:min-h-[calc(100vh-80px)] lg:px-8 lg:py-14">
+    <section id="#how-to-use-it" className="relative isolate overflow-hidden border-b border-blue-400/15 bg-[#020813] px-4 py-12 text-white sm:px-6 lg:min-h-[calc(100vh-80px)] lg:px-8 lg:py-14">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_24%,rgba(126,34,206,0.30),transparent_34%),radial-gradient(circle_at_45%_52%,rgba(37,99,235,0.12),transparent_32%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-px bg-blue-400/30 shadow-[0_0_44px_12px_rgba(37,99,235,0.38)]" />
 
@@ -71,7 +71,7 @@ function BeautySalonsHero() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="#"
+                href="/pricing"
                 className="group inline-flex h-12 items-center justify-center gap-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-7 text-sm font-semibold text-white shadow-[0_0_34px_rgba(79,70,229,0.55)] transition-transform hover:-translate-y-0.5"
               >
                 Book a Demo
@@ -79,7 +79,7 @@ function BeautySalonsHero() {
               </Link>
 
               <Link
-                href="#"
+                href="#how-to-use-it"
                 className="inline-flex h-12 items-center justify-center gap-3 rounded-lg border border-blue-300/15 bg-[#03142d]/70 px-7 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-300/30 hover:bg-blue-500/10 hover:text-white"
               >
                 See How It Works

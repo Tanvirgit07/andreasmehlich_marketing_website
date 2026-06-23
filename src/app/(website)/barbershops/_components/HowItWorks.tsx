@@ -75,7 +75,7 @@ const steps = [
 
 function HowItWorks() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#020813] px-4 py-16 text-white sm:px-6 lg:px-8 lg:py-20">
+    <section id = "how-to-use-it" className="relative isolate overflow-hidden bg-[#020813] px-4 py-16 text-white sm:px-6 lg:px-8 lg:py-20">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_12%,rgba(37,99,235,0.16),transparent_32%),radial-gradient(circle_at_50%_88%,rgba(37,99,235,0.16),transparent_35%)]" />
 
       <div className="container mx-auto">
