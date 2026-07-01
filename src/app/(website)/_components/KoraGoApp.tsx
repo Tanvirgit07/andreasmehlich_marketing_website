@@ -34,7 +34,7 @@ export default function KoraGoApp() {
   ];
 
   return (
-    <section className="w-full bg-[#00091E] px-6 lg:py-20  text-white md:px-12 lg:px-20 overflow-hidden">
+    <section className="w-full bg-[#020717] px-6 lg:py-20  text-white md:px-12 lg:px-20 overflow-hidden">
       <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-center gap-12 lg:grid-cols-12">
         {/* ================= LEFT COLUMN (Takes 4 Cols) ================= */}
         <div className="flex flex-col items-start space-y-6 lg:col-span-5">
@@ -84,7 +84,7 @@ export default function KoraGoApp() {
         {/* ================= MIDDLE COLUMN: Dummy Mobile Image (Takes 4 Cols) ================= */}
         <div className="flex items-center justify-center lg:col-span-3">
           <Image
-            src="/images/phone_iamge.svg"
+            src="/images/phone_iamge.png"
             height={500}
             width={500}
             alt="app"
